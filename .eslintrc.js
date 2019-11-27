@@ -3,20 +3,22 @@ module.exports = {
 		es6: true,
 		node: true,
 	},
-	"parserOptions": {
-        "sourceType": "module",
-        "ecmaVersion": 8,
-        "ecmaFeatures": {
-            "experimentalObjectRestSpread": true
+	parserOptions: {
+        sourceType: 'module',
+        ecmaVersion: 8,
+        ecmaFeatures: {
+            experimentalObjectRestSpread: true
         }
-    },
-	plugins: ['prettier'],
+	},
+	parser: '@typescript-eslint/parser',
+	plugins: ['@typescript-eslint', 'prettier'],
 	extends: [
 		'eslint:recommended',
+		'plugin:@typescript-eslint/recommended',
+		'prettier/@typescript-eslint',
 		'plugin:prettier/recommended',
 	],
 	globals: {
-		rootRequire: false,
 		SERVICE_NAME: false,
 		SERVICE_TOKEN: false,
 	},
