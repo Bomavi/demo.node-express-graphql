@@ -1,8 +1,8 @@
-/* npm imports: common */
-const { connect, connection } = require('mongoose');
+/* npm imports */
+import { connect, connection } from 'mongoose';
 
-/* root imports: common */
-const { logger } = rootRequire('utils');
+/* root imports */
+import { logger } from '~/utils';
 
 const MONGO_DB_HOST = process.env.MONGO_DB_HOST || process.env.MONGO_DB_DEV_HOST;
 const MONGO_DB_PORT = process.env.MONGO_DB_PORT || process.env.MONGO_DB_DEV_PORT;
@@ -14,11 +14,8 @@ const options = {
 	useFindAndModify: false,
 };
 
-const mongoConnect = () => {
-	connect(
-		connectionUrl,
-		options
-	);
+const mongoConnect = (): void => {
+	connect(connectionUrl, options);
 
 	connection.on('connected', () => {
 		logger.mongo(`Mongoose connection is open to: ${connectionUrl}`);
@@ -39,4 +36,4 @@ const mongoConnect = () => {
 	});
 };
 
-module.exports = mongoConnect;
+export { mongoConnect };
