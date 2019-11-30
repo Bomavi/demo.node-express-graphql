@@ -1,15 +1,15 @@
-/* npm imports: common */
-const JWT = require('jsonwebtoken');
-const dotenv = require('dotenv');
+/* npm imports */
+import JWT, { SignOptions } from 'jsonwebtoken';
+import dotenv from 'dotenv';
 
 dotenv.config();
 
 const defaultExpiration = Number(process.env.SESSION_EXPIRES_IN);
-const secret = process.env.JWT_SECRET;
+const secret = String(process.env.JWT_SECRET);
 
-const issue = (payload, isExpires = true) =>
+const issue = (payload: JWTPayload, isExpires = true): Promise<string> =>
 	new Promise((resolve, reject) => {
-		const options = {};
+		const options: SignOptions = {};
 
 		if (!payload) {
 			reject('JWT: payload required parameter');
@@ -23,17 +23,17 @@ const issue = (payload, isExpires = true) =>
 		});
 	});
 
-const validate = token =>
+const validate = (token: string): Promise<JWTPayload> =>
 	new Promise((resolve, reject) => {
 		if (!token) reject('{ token } required as parameter for token validation');
 
 		JWT.verify(token, secret, (err, decoded) => {
 			if (err) reject(err);
-			resolve(decoded);
+			resolve(decoded as JWTPayload);
 		});
 	});
 
-module.exports = {
+export const jwt = {
 	issue,
 	validate,
 };
