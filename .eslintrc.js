@@ -35,6 +35,9 @@ module.exports = {
 		'spaced-comment': ['error', 'always'],
 		'no-unused-vars': ['error', { 'argsIgnorePattern': '^_', 'ignoreRestSiblings': true }],
 		'require-atomic-updates': 0,
+		// typescript
+		'@typescript-eslint/no-non-null-assertion': 0,
+		'@typescript-eslint/no-unused-vars': ['error', { 'argsIgnorePattern': '^_', 'ignoreRestSiblings': true }],
 		// prettier
 		'prettier/prettier': [
 			'error',
