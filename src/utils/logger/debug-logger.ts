@@ -1,5 +1,5 @@
 /* npm imports: common */
-const debugLogger = require('debug');
+import debugLogger from 'debug';
 
 const debug = (msg, format = '') => {
 	debugLogger('debug')(msg, format);
@@ -29,7 +29,7 @@ const error = (msg, format = '') => {
 	debugLogger('error')(msg, format);
 };
 
-module.exports = {
+export const logger = {
 	debug,
 	app,
 	api,
