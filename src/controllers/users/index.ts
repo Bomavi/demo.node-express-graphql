@@ -1,7 +1,10 @@
-/* npm imports: common */
-const express = require('express');
+/* npm imports */
+import express, { RequestHandler, Router } from 'express';
 
-const searchOrGetAll = ({ User }) => async (req, res, next) => {
+/* root imports */
+import { User } from '~/models/User';
+
+const searchOrGetAll: RequestHandler = async (req, res, next) => {
 	try {
 		const { q = '' } = req.query;
 		const users = await User.find()
@@ -13,7 +16,7 @@ const searchOrGetAll = ({ User }) => async (req, res, next) => {
 	}
 };
 
-const getById = ({ User }) => async (req, res, next) => {
+const getById: RequestHandler = async (req, res, next) => {
 	try {
 		const { _id } = req.params;
 		const user = await User.findById(_id).getPublic();
@@ -23,7 +26,7 @@ const getById = ({ User }) => async (req, res, next) => {
 	}
 };
 
-const updateById = ({ User }) => async (req, res, next) => {
+const updateById: RequestHandler = async (req, res, next) => {
 	try {
 		const { _id } = req.params;
 		const { firstname, lastname, theme } = req.body;
@@ -38,25 +41,25 @@ const updateById = ({ User }) => async (req, res, next) => {
 	}
 };
 
-const deleteById = ({ User }) => async (req, res, next) => {
+const deleteById: RequestHandler = async (req, res, next) => {
 	try {
 		const { _id } = req.params;
 		const user = await User.findByIdAndDelete(_id);
-		res.status(200).send(user._id);
+		if (user) res.status(200).send(user._id);
 	} catch (e) {
 		next(e);
 	}
 };
 
-module.exports = models => {
+export const UsersController = (): Router => {
 	const router = express();
 
-	router.get('/', searchOrGetAll(models));
-	router.get('/search', searchOrGetAll(models));
-	router.get('/:_id', getById(models));
+	router.get('/', searchOrGetAll);
+	router.get('/search', searchOrGetAll);
+	router.get('/:_id', getById);
 
-	router.put('/:_id', updateById(models));
-	router.delete('/:_id', deleteById(models));
+	router.put('/:_id', updateById);
+	router.delete('/:_id', deleteById);
 
 	return router;
 };
