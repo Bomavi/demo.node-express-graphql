@@ -1,14 +1,13 @@
-/* npm imports: common */
-const createError = require('http-errors');
+/* npm imports */
+import { ErrorRequestHandler } from 'express';
+import createError from 'http-errors';
 
-/* root imports: common */
-const { logger } = rootRequire('utils');
+/* root imports */
+import { logger } from '~/utils';
 
-const errorHandler = (err, _req, res, _next) => {
+const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
 	const error =
-		err instanceof createError.HttpError
-			? err
-			: createError(500, 'InternalServerError');
+		err instanceof createError.HttpError ? err : createError(500, 'InternalServerError');
 
 	if (process.env.NODE_ENV !== 'production') {
 		logger.error(`${error.statusCode || error.status} %O`, err.message);
@@ -24,4 +23,4 @@ const errorHandler = (err, _req, res, _next) => {
 	});
 };
 
-module.exports = errorHandler;
+export { errorHandler };
