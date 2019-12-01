@@ -1,16 +1,17 @@
-/* npm imports: common */
-const express = require('express');
-const createError = require('http-errors');
-const bcrypt = require('bcryptjs');
-const mongoose = require('mongoose');
+/* npm imports */
+import express, { Router, RequestHandler } from 'express';
+import createError from 'http-errors';
+import bcrypt from 'bcryptjs';
+import mongoose from 'mongoose';
 
-/* root imports: common */
-const { jwt } = rootRequire('utils');
+/* root imports */
+import { jwt } from '~/utils';
+import { User } from '~/models';
 
-const ObjectId = mongoose.Types.ObjectId;
+const { ObjectId } = mongoose.Types;
 const BCRYPT_SALT = Number(process.env.BCRYPT_SALT) || 10;
 
-const login = ({ User }) => async (req, res, next) => {
+const login: RequestHandler = async (req, res, next) => {
 	try {
 		const { username = '', password = '', isGuest = false } = req.body;
 		let user;
@@ -32,10 +33,7 @@ const login = ({ User }) => async (req, res, next) => {
 			);
 
 			if (!isPasswordEqual) {
-				throw createError(
-					401,
-					`credentials for "${credentials.username}" invalid`
-				);
+				throw createError(401, `credentials for "${credentials.username}" invalid`);
 			}
 		}
 
@@ -60,15 +58,15 @@ const login = ({ User }) => async (req, res, next) => {
 		const publicUserInfo = await User.findById(user._id).getPublic();
 		const token = await jwt.issue({ userId: publicUserInfo._id });
 
-		req.session.accessToken = token;
-		req.session.userId = publicUserInfo._id;
+		req.session!.accessToken = token;
+		req.session!.userId = publicUserInfo._id;
 		res.status(200).send(publicUserInfo);
 	} catch (e) {
 		next(e);
 	}
 };
 
-const register = ({ User }) => async (req, res, next) => {
+const register: RequestHandler = async (req, res, next) => {
 	try {
 		const { username, password } = req.body;
 
@@ -92,17 +90,17 @@ const register = ({ User }) => async (req, res, next) => {
 		const publicUserInfo = await User.findById(user._id).getPublic();
 		const token = await jwt.issue({ userId: publicUserInfo._id });
 
-		req.session.accessToken = token;
-		req.session.userId = publicUserInfo._id;
+		req.session!.accessToken = token;
+		req.session!.userId = publicUserInfo._id;
 		res.status(200).send(publicUserInfo);
 	} catch (e) {
 		next(e);
 	}
 };
 
-const logout = () => async (req, res, next) => {
+const logout: RequestHandler = async (req, res, next) => {
 	try {
-		req.session.destroy(err => {
+		req.session!.destroy(err => {
 			if (err) return next(err);
 
 			res.status(200).send({ message: 'user was logged out successfuly' });
@@ -112,9 +110,9 @@ const logout = () => async (req, res, next) => {
 	}
 };
 
-const authenticate = ({ User }) => async (req, res, next) => {
+const authenticate: RequestHandler = async (req, res, next) => {
 	try {
-		const { accessToken } = req.session;
+		const { accessToken } = req.session!;
 
 		if (!accessToken) throw createError(401, 'user not authenticated');
 
@@ -127,13 +125,13 @@ const authenticate = ({ User }) => async (req, res, next) => {
 	}
 };
 
-module.exports = models => {
+export const AuthController = (): Router => {
 	const router = express();
 
-	router.post('/login', login(models));
-	router.post('/register', register(models));
-	router.post('/logout', logout(models));
-	router.post('/authenticate', authenticate(models));
+	router.post('/login', login);
+	router.post('/register', register);
+	router.post('/logout', logout);
+	router.post('/authenticate', authenticate);
 
 	return router;
 };
