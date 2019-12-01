@@ -1,14 +1,15 @@
-/* npm imports: common */
-const createError = require('http-errors');
+/* npm imports */
+import { RequestHandler } from 'express';
+import createError from 'http-errors';
 
-/* root imports: common */
-const { jwt } = rootRequire('utils');
+/* root imports */
+import { jwt } from '~/utils';
 
-const isAuthenticated = async (req, res, next) => {
+const isAuthenticated: RequestHandler = async (req, _res, next) => {
 	let token = '';
 
-	if (req.session.accessToken) {
-		token = req.session.accessToken;
+	if (req.session!.accessToken) {
+		token = req.session!.accessToken;
 	} else {
 		const accessToken = req.headers['authorization'];
 
@@ -35,4 +36,4 @@ const isAuthenticated = async (req, res, next) => {
 	}
 };
 
-module.exports = isAuthenticated;
+export { isAuthenticated };
