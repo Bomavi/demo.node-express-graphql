@@ -1,16 +1,19 @@
-/* npm imports: common */
-const express = require('express');
-const mongoose = require('mongoose');
+/* npm imports */
+import express, { RequestHandler, Router } from 'express';
+import mongoose from 'mongoose';
 
-const ObjectId = mongoose.Types.ObjectId;
+/* root imports */
+import { Task } from '~/models/Task';
 
-const searchOrGetAll = ({ Task }) => async (req, res, next) => {
+const { ObjectId } = mongoose.Types;
+
+const searchOrGetAll: RequestHandler = async (req, res, next) => {
 	try {
-		const { userId } = req.session;
+		const { userId } = req.session!;
 		const { q = '' } = req.query;
 		const tasks = await Task.find()
 			.search(q)
-			.createdBy(userId)
+			.createdBy(userId!)
 			.sort('-createdAt')
 			.getPublic();
 		res.status(200).send(tasks);
@@ -19,12 +22,12 @@ const searchOrGetAll = ({ Task }) => async (req, res, next) => {
 	}
 };
 
-const getById = ({ Task }) => async (req, res, next) => {
+const getById: RequestHandler = async (req, res, next) => {
 	try {
-		const { userId } = req.session;
+		const { userId } = req.session!;
 		const { _id } = req.params;
 		const task = await Task.findById(_id)
-			.createdBy(userId)
+			.createdBy(userId!)
 			.getPublic();
 		res.status(200).send(task);
 	} catch (e) {
@@ -32,11 +35,11 @@ const getById = ({ Task }) => async (req, res, next) => {
 	}
 };
 
-const create = ({ Task }) => async (req, res, next) => {
+const create: RequestHandler = async (req, res, next) => {
 	try {
-		const { userId } = req.session;
+		const { userId } = req.session!;
 		const { description, completed } = req.body;
-		const newTask = await new Task({
+		const newTask = new Task({
 			_id: ObjectId(),
 			description,
 			completed,
@@ -52,7 +55,7 @@ const create = ({ Task }) => async (req, res, next) => {
 	}
 };
 
-const updateById = ({ Task }) => async (req, res, next) => {
+const updateById: RequestHandler = async (req, res, next) => {
 	try {
 		const { _id } = req.params;
 		const { description, completed } = req.body;
@@ -67,27 +70,27 @@ const updateById = ({ Task }) => async (req, res, next) => {
 	}
 };
 
-const deleteById = ({ Task }) => async (req, res, next) => {
+const deleteById: RequestHandler = async (req, res, next) => {
 	try {
 		const { _id } = req.params;
 		const task = await Task.findByIdAndDelete(_id);
-		res.status(200).send(task._id);
+		if (task) res.status(200).send(task._id);
 	} catch (e) {
 		next(e);
 	}
 };
 
-module.exports = models => {
+export const TasksController = (): Router => {
 	const router = express();
 
-	router.get('/', searchOrGetAll(models));
-	router.get('/search', searchOrGetAll(models));
-	router.get('/:_id', getById(models));
+	router.get('/', searchOrGetAll);
+	router.get('/search', searchOrGetAll);
+	router.get('/:_id', getById);
 
-	router.post('/', create(models));
+	router.post('/', create);
 
-	router.put('/:_id', updateById(models));
-	router.delete('/:_id', deleteById(models));
+	router.put('/:_id', updateById);
+	router.delete('/:_id', deleteById);
 
 	return router;
 };
