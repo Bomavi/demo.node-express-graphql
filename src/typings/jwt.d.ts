@@ -1,3 +1,4 @@
 declare interface JWTPayload {
-	userId: string;
+	userId?: string;
+	service?: string;
 }
