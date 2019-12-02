@@ -15,6 +15,7 @@ const mongoConnect = async (): Promise<Partial<Connection>> => {
 		port: MONGO_DB_PORT,
 		database: DB_NAME,
 		logging: !isProd,
+		entities: ['~/models/*.*'],
 	});
 };
 
