@@ -15,8 +15,6 @@ const isAuthenticated: RequestHandler = async (req, _res, next) => {
 
 		if (!accessToken) return next(createError(401, 'no accessToken provided!'));
 
-		if (accessToken.startsWith('service_')) return next();
-
 		if (accessToken.startsWith('Bearer ')) {
 			const tokenData = accessToken.split(' ');
 			token = tokenData[1];
