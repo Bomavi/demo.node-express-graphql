@@ -3,10 +3,11 @@
 	"version": "1.0.0",
 	"author": "Maksym Bozhenov <max.bozh.n1mbo@gmail.com>",
 	"scripts": {
-		"lint": "eslint --ignore-path .gitignore . --ext js --fix",
-		"dev": "NODE_ENV=development DEBUG=debug,http,graphql,app,mongo,redis,error nodemon -w src --ext js --exec \"npm run start:dev\"",
-		"prod": "NODE_ENV=production npm run start",
-		"start:dev": "npm-run-all lint start",
+		"lint": "eslint --ignore-path .gitignore . --ext ts --fix",
+		"build": "rimraf ./dist && tsc -p tsconfig.json",
+		"dev": "cross-env NODE_ENV=development DEBUG=debug,http,graphql,app,mongo,redis,error npm run start:dev",
+		"prod": "cross-env NODE_ENV=production npm-run-all build start",
+		"start:dev": "ts-node-dev --respawn ./src/index.ts",
 		"start": "node ./dist"
 	},
 	"_moduleAliases": {
@@ -27,6 +28,7 @@
 		"@types/uuid": "^3.4.6",
 		"@typescript-eslint/eslint-plugin": "^2.9.0",
 		"@typescript-eslint/parser": "^2.9.0",
+		"cross-env": "^6.0.3",
 		"eslint": "^6.7.1",
 		"eslint-config-prettier": "^6.7.0",
 		"eslint-plugin-prettier": "^3.1.1",
@@ -34,7 +36,9 @@
 		"nodemon": "^2.0.1",
 		"npm-run-all": "^4.1.5",
 		"prettier": "^1.19.1",
+		"rimraf": "^3.0.0",
 		"ts-jest": "^24.2.0",
+		"ts-node": "^8.5.4",
 		"ts-node-dev": "^1.0.0-pre.44",
 		"typescript": "^3.7.2"
 	},
