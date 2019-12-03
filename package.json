@@ -11,7 +11,7 @@
 		"start": "node ./dist"
 	},
 	"_moduleAliases": {
-		"~": "dist"
+		"~": "src"
 	},
 	"devDependencies": {
 		"@types/bcryptjs": "^2.4.2",
@@ -58,6 +58,7 @@
 		"ioredis": "^4.14.1",
 		"jsonwebtoken": "^8.5.1",
 		"module-alias": "^2.2.2",
+		"mongodb": "^3.3.5",
 		"reflect-metadata": "^0.1.13",
 		"type-graphql": "^0.17.5",
 		"typeorm": "^0.2.20",
