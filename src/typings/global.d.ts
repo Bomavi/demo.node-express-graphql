@@ -1,5 +1,5 @@
-// Hide error for "declare global"
-export {};
+/* eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars */
+import { ObjectID } from 'typeorm';
 
 // Add our custom fields to 3-rd party modules
 declare global {
@@ -13,7 +13,7 @@ declare global {
 	namespace Express {
 		interface Session {
 			accessToken?: string;
-			userId?: string;
+			userId?: ObjectID | string;
 		}
 	}
 }
