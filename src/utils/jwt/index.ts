@@ -1,4 +1,3 @@
-/* npm imports */
 import JWT, { SignOptions } from 'jsonwebtoken';
 import dotenv from 'dotenv';
 
