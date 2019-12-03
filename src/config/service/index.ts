@@ -1,4 +1,3 @@
-/* root imports */
 import { jwt, logger } from '~/utils';
 
 const init = async (): Promise<void> => {
