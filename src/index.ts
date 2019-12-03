@@ -1,15 +1,15 @@
-// import 'module-alias/register';
+import 'module-alias/register';
 import 'reflect-metadata';
 import express from 'express';
 import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
 import { ApolloServer } from 'apollo-server-express';
-import { buildSchema } from 'type-graphql';
 
 import { logger } from '~/utils';
 import { service } from '~/config/service';
 import { mongoConnect } from '~/config/mongo';
 import { redisSessionMiddleware } from '~/config/redis';
+import { generateSchema } from '~/modules';
 
 /* Get .env constants */
 dotenv.config();
@@ -22,15 +22,17 @@ service.init();
 
 	await mongoConnect();
 
-	const schema = await buildSchema({
-		resolvers: [],
-	});
+	const schema = await generateSchema();
 
-	const apolloServer = new ApolloServer({ schema });
+	const apolloServer = new ApolloServer({
+		schema,
+		context: ({ req, res }): ApolloContext => ({ req, res }),
+	});
 
 	const app = express();
 
 	app.set('trust proxy', true);
+
 	app.use(bodyParser.urlencoded({ extended: false }));
 	app.use(bodyParser.json());
 
