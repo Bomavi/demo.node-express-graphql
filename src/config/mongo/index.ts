@@ -1,4 +1,3 @@
-/* npm imports */
 import { createConnection, Connection } from 'typeorm';
 
 const mongoConnect = async (): Promise<Partial<Connection>> => {
@@ -8,14 +7,13 @@ const mongoConnect = async (): Promise<Partial<Connection>> => {
 		process.env.MONGO_DB_PORT || process.env.MONGO_DB_DEV_PORT
 	);
 	const DB_NAME = process.env.DB_NAME || process.env.DB_DEV_NAME;
+	const url = `${MONGO_DB_HOST}:${MONGO_DB_PORT}/${DB_NAME}`;
 
 	return await createConnection({
 		type: 'mongodb',
-		host: MONGO_DB_HOST,
-		port: MONGO_DB_PORT,
-		database: DB_NAME,
+		url,
 		logging: !isProd,
-		entities: ['~/models/*.*'],
+		entities: [__dirname + '/../../models/*.*'],
 	});
 };
 
