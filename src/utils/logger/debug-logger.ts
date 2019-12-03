@@ -1,31 +1,30 @@
-/* npm imports: common */
 import debugLogger from 'debug';
 
-const debug = (msg, format = '') => {
+const debug = (msg: string, format = ''): void => {
 	debugLogger('debug')(msg, format);
 };
 
-const app = (msg, format = '') => {
+const app = (msg: string, format = ''): void => {
 	debugLogger('app')(msg, format);
 };
 
-const api = (msg, format = '') => {
+const api = (msg: string, format = ''): void => {
 	debugLogger('api')(msg, format);
 };
 
-const http = (msg, format = '') => {
+const http = (msg: string, format = ''): void => {
 	debugLogger('http')(msg, format);
 };
 
-const mongo = (msg, format = '') => {
+const mongo = (msg: string, format = ''): void => {
 	debugLogger('mongo')(msg, format);
 };
 
-const redis = (msg, format = '') => {
+const redis = (msg: string, format = ''): void => {
 	debugLogger('redis')(msg, format);
 };
 
-const error = (msg, format = '') => {
+const error = (msg: string, format = ''): void => {
 	debugLogger('error')(msg, format);
 };
 
