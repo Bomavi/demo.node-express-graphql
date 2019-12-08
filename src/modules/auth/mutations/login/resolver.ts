@@ -3,7 +3,7 @@ import { getMongoManager } from 'typeorm';
 import createError from 'http-errors';
 import bcrypt from 'bcryptjs';
 
-import { jwt } from '~/utils';
+import { jwt, logger } from '~/utils';
 import { User } from '~/models/User';
 
 import { LoginArgs } from './args';
@@ -17,7 +17,7 @@ export class LoginResolver {
 	async login(
 		@Args() { username, password, isGuest }: LoginArgs,
 		@Ctx() ctx: ApolloContext
-	): Promise<User | undefined> {
+	): Promise<User> {
 		let user;
 
 		const credentials = {
@@ -48,12 +48,12 @@ export class LoginResolver {
 
 			if (!hash) throw createError(500, 'bcrypt failed');
 
-			const newUser = await manager
-				.create(User, {
-					username: credentials.username,
-					password: hash,
-				})
-				.save();
+			const userBody = new User();
+
+			userBody.username = credentials.username;
+			userBody.password = hash;
+
+			const newUser = await manager.save(User, userBody);
 
 			if (newUser) user = newUser;
 		}
@@ -64,6 +64,8 @@ export class LoginResolver {
 
 		ctx.req.session!.accessToken = token;
 		ctx.req.session!.userId = user.id;
+
+		logger.debug('User body is %O', user);
 
 		return user;
 	}

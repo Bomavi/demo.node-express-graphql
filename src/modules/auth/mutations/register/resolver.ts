@@ -17,7 +17,7 @@ export class RegisterResolver {
 	async register(
 		@Args() { username, password }: RegisterArgs,
 		@Ctx() ctx: ApolloContext
-	): Promise<User | undefined> {
+	): Promise<User> {
 		if (!username) throw createError(404, `username is required`);
 		if (!password) throw createError(404, `password is required`);
 
