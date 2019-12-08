@@ -3,7 +3,7 @@ import { ObjectID } from 'typeorm';
 
 declare global {
 	interface JWTPayload {
-		userId?: ObjectID | string;
+		userId?: number;
 		service?: string;
 	}
 }

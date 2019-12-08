@@ -13,7 +13,7 @@ declare global {
 	namespace Express {
 		interface Session {
 			accessToken?: string;
-			userId?: ObjectID | string;
+			userId?: number;
 		}
 	}
 }
