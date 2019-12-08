@@ -1,5 +1,6 @@
 import 'module-alias/register';
 import 'reflect-metadata';
+
 import express from 'express';
 import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
@@ -7,7 +8,7 @@ import { ApolloServer } from 'apollo-server-express';
 
 import { logger } from '~/utils';
 import { service } from '~/config/service';
-import { mongoConnect } from '~/config/mongo';
+import { postgresConnect } from '~/config/typeorm';
 import { redisSessionMiddleware } from '~/config/redis';
 import { generateSchema } from '~/modules';
 
@@ -20,7 +21,7 @@ service.init();
 (async (): Promise<void> => {
 	const PORT = Number(process.env.PORT || process.env.DEV_PORT);
 
-	await mongoConnect();
+	await postgresConnect();
 
 	const schema = await generateSchema();
 
