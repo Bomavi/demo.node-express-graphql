@@ -1,20 +1,29 @@
 import {
 	Entity,
 	BaseEntity,
-	ObjectID,
-	ObjectIdColumn,
+	PrimaryGeneratedColumn,
 	Column,
 	CreateDateColumn,
 	UpdateDateColumn,
 } from 'typeorm';
-import { ObjectType, Field, ID } from 'type-graphql';
+import { ObjectType, Field, Int, registerEnumType } from 'type-graphql';
+
+export enum Theme {
+	light = 'light',
+	dark = 'dark',
+}
+
+registerEnumType(Theme, {
+	name: 'Theme',
+	description: 'Only available theme options',
+});
 
 @ObjectType()
-@Entity()
+@Entity('users')
 export class User extends BaseEntity {
-	@Field(() => ID)
-	@ObjectIdColumn()
-	id!: ObjectID;
+	@Field(() => Int)
+	@PrimaryGeneratedColumn()
+	id!: number;
 
 	@Field()
 	@Column()
@@ -23,9 +32,9 @@ export class User extends BaseEntity {
 	@Column()
 	password!: string;
 
-	@Field(() => String, { defaultValue: 'light' })
+	@Field(() => Theme)
 	@Column()
-	theme!: Theme;
+	theme: Theme = Theme.light;
 
 	@Field()
 	@CreateDateColumn({ type: 'timestamp' })
