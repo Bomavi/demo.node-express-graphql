@@ -1,11 +1,8 @@
 import { Resolver, Mutation, Authorized, Ctx, Args } from 'type-graphql';
-import { getMongoManager } from 'typeorm';
 
 import { Task } from '~/models/Task';
 
 import { CreateTaskArgs } from './args';
-
-const manager = getMongoManager();
 
 @Resolver()
 export class CreateTaskResolver {
@@ -21,9 +18,9 @@ export class CreateTaskResolver {
 
 		newTask.description = description;
 		newTask.completed = completed;
-		newTask.createdBy = userId as string;
+		newTask.createdBy = userId as number;
 
-		const task = await manager.save(Task, newTask);
+		const task = await Task.save(newTask);
 
 		return task;
 	}

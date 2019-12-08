@@ -1,11 +1,8 @@
 import { Resolver, Mutation, Authorized, Ctx, Args } from 'type-graphql';
-import { getMongoManager } from 'typeorm';
 
 import { Task } from '~/models/Task';
 
 import { UpdateTaskArgs } from './args';
-
-const manager = getMongoManager();
 
 @Resolver()
 export class UpdateTaskResolver {
@@ -17,17 +14,17 @@ export class UpdateTaskResolver {
 	): Promise<Task> {
 		const { userId } = ctx.req.session!;
 
-		const task = await manager.findOneOrFail(Task, {
+		const task = await Task.findOneOrFail({
 			where: {
 				id,
 				createdBy: userId!,
 			},
 		});
 
-		task.description = description;
-		task.completed = completed;
+		if (description) task.description = description;
+		if (typeof completed === 'boolean') task.completed = completed;
 
-		const updatedTask = await manager.save(Task, task);
+		const updatedTask = await Task.save(task);
 
 		return updatedTask;
 	}

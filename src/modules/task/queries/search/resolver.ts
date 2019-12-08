@@ -1,11 +1,8 @@
 import { Resolver, Authorized, Query, Ctx, Args } from 'type-graphql';
-import { getMongoManager } from 'typeorm';
 
 import { Task } from '~/models/Task';
 
 import { SearchTasksArgs } from './args';
-
-const manager = getMongoManager();
 
 @Resolver()
 export class SearchTasksResolver {
@@ -17,7 +14,7 @@ export class SearchTasksResolver {
 	): Promise<Task[]> {
 		const { userId } = ctx.req.session!;
 
-		const tasks = await manager.find(Task, {
+		const tasks = await Task.find({
 			where: {
 				description: new RegExp(q.toLowerCase(), 'i'),
 				createdBy: userId!,

@@ -1,30 +1,27 @@
-import { Resolver, Mutation, Authorized, Ctx, Args, ID } from 'type-graphql';
-import { getMongoManager } from 'typeorm';
+import { Resolver, Mutation, Authorized, Ctx, Args, Int } from 'type-graphql';
 
 import { Task } from '~/models/Task';
 
 import { DeleteTaskArgs } from './args';
 
-const manager = getMongoManager();
-
 @Resolver()
 export class DeleteTaskResolver {
 	@Authorized()
-	@Mutation(() => ID)
+	@Mutation(() => Int)
 	async deleteTask(
 		@Args() { id }: DeleteTaskArgs,
 		@Ctx() ctx: ApolloContext
-	): Promise<string> {
+	): Promise<number> {
 		const { userId } = ctx.req.session!;
 
-		const task = await manager.findOneOrFail(Task, {
+		const task = await Task.findOneOrFail({
 			where: {
 				id,
-				createdBy: userId!,
+				createdBy: userId as number,
 			},
 		});
 
-		await manager.delete(Task, task.id);
+		await Task.delete(task.id);
 
 		return id;
 	}
