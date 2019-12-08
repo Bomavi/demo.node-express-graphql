@@ -1,20 +1,19 @@
 import {
 	Entity,
 	BaseEntity,
-	ObjectID,
-	ObjectIdColumn,
+	PrimaryGeneratedColumn,
 	Column,
 	CreateDateColumn,
 	UpdateDateColumn,
 } from 'typeorm';
-import { ObjectType, Field, ID } from 'type-graphql';
+import { ObjectType, Field, Int } from 'type-graphql';
 
 @ObjectType()
-@Entity()
+@Entity('tasks')
 export class Task extends BaseEntity {
-	@Field(() => ID)
-	@ObjectIdColumn()
-	id!: ObjectID;
+	@Field(() => Int)
+	@PrimaryGeneratedColumn()
+	id!: number;
 
 	@Field()
 	@Column()
@@ -25,7 +24,7 @@ export class Task extends BaseEntity {
 	completed!: boolean;
 
 	@Column()
-	createdBy!: string;
+	createdBy!: number;
 
 	@Field()
 	@CreateDateColumn({ type: 'timestamp' })
