@@ -1,9 +1,11 @@
-import { ArgsType, Field, ID } from 'type-graphql';
+import { ArgsType, Field, Int } from 'type-graphql';
+
+import { Theme } from '~/models/User';
 
 @ArgsType()
 export class UpdateUserArgs {
-	@Field(() => ID)
-	id!: string;
+	@Field(() => Int)
+	id!: number;
 
 	@Field(() => String, { nullable: true })
 	username?: string;
@@ -11,6 +13,6 @@ export class UpdateUserArgs {
 	@Field(() => String, { nullable: true })
 	password?: string;
 
-	@Field(() => String, { nullable: true })
+	@Field(() => Theme, { nullable: true })
 	theme?: Theme;
 }

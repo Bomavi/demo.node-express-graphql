@@ -1,5 +1,7 @@
 import { ArgsType, Field } from 'type-graphql';
 
+import { Theme } from '~/models/User';
+
 @ArgsType()
 export class CreateUserArgs {
 	@Field(() => String)
