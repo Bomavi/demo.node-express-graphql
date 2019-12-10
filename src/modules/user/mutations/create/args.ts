@@ -1,6 +1,6 @@
 import { ArgsType, Field } from 'type-graphql';
 
-import { Theme } from '~/models/User';
+import { Theme } from '~/utils/enum';
 
 @ArgsType()
 export class CreateUserArgs {
