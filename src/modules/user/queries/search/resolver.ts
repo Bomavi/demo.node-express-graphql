@@ -1,4 +1,5 @@
 import { Resolver, Query, Authorized, Args } from 'type-graphql';
+import { Like } from 'typeorm';
 
 import { User } from '~/models/User';
 
@@ -8,13 +9,13 @@ import { SearchUsersArgs } from './args';
 export class SearchUsersResolver {
 	@Authorized()
 	@Query(() => [User])
-	async searchUsers(@Args() { q }: SearchUsersArgs): Promise<User[]> {
+	async searchUsers(@Args() { q, sortBy }: SearchUsersArgs): Promise<User[]> {
 		const users = await User.find({
 			where: {
-				username: new RegExp(q.toLowerCase(), 'i'),
+				username: Like(`%${q}%`),
 			},
 			order: {
-				createdAt: 'ASC',
+				createdAt: sortBy,
 			},
 		});
 

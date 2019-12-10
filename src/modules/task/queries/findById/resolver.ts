@@ -17,8 +17,11 @@ export class FindTaskByIDResolver {
 		const task = await Task.findOne({
 			where: {
 				id,
-				createdBy: userId!,
+				author: {
+					id: userId as number,
+				},
 			},
+			relations: ['author'],
 		});
 
 		return task;

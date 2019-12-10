@@ -18,7 +18,7 @@ export class CreateTaskResolver {
 
 		newTask.description = description;
 		newTask.completed = completed;
-		newTask.createdBy = userId as number;
+		newTask.author = userId as number;
 
 		const task = await Task.save(newTask);
 

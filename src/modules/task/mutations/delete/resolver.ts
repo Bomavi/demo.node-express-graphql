@@ -17,8 +17,11 @@ export class DeleteTaskResolver {
 		const task = await Task.findOneOrFail({
 			where: {
 				id,
-				createdBy: userId as number,
+				author: {
+					id: userId as number,
+				},
 			},
+			relations: ['author'],
 		});
 
 		await Task.delete(task.id);

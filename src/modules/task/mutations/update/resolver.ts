@@ -17,8 +17,11 @@ export class UpdateTaskResolver {
 		const task = await Task.findOneOrFail({
 			where: {
 				id,
-				createdBy: userId!,
+				author: {
+					id: userId as number,
+				},
 			},
+			relations: ['author'],
 		});
 
 		if (description) task.description = description;
