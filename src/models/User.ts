@@ -3,20 +3,15 @@ import {
 	BaseEntity,
 	PrimaryGeneratedColumn,
 	Column,
+	OneToMany,
 	CreateDateColumn,
 	UpdateDateColumn,
 } from 'typeorm';
-import { ObjectType, Field, Int, registerEnumType } from 'type-graphql';
+import { ObjectType, Field, Int } from 'type-graphql';
 
-export enum Theme {
-	light = 'light',
-	dark = 'dark',
-}
+import { Theme } from '~/utils/enum';
 
-registerEnumType(Theme, {
-	name: 'Theme',
-	description: 'Only available theme options',
-});
+import { Task } from './Task';
 
 @ObjectType()
 @Entity('users')
@@ -35,6 +30,13 @@ export class User extends BaseEntity {
 	@Field(() => Theme)
 	@Column()
 	theme: Theme = Theme.light;
+
+	@OneToMany(
+		() => Task,
+		task => task.author,
+		{ cascade: true }
+	)
+	tasks!: Task[];
 
 	@Field()
 	@CreateDateColumn({ type: 'timestamp' })

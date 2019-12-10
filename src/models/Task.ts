@@ -3,10 +3,13 @@ import {
 	BaseEntity,
 	PrimaryGeneratedColumn,
 	Column,
+	ManyToOne,
 	CreateDateColumn,
 	UpdateDateColumn,
 } from 'typeorm';
 import { ObjectType, Field, Int } from 'type-graphql';
+
+import { User } from './User';
 
 @ObjectType()
 @Entity('tasks')
@@ -23,8 +26,11 @@ export class Task extends BaseEntity {
 	@Column()
 	completed!: boolean;
 
-	@Column()
-	createdBy!: number;
+	@ManyToOne(
+		() => User,
+		user => user.tasks
+	)
+	author!: number;
 
 	@Field()
 	@CreateDateColumn({ type: 'timestamp' })
