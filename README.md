@@ -6,7 +6,12 @@ Application was built in demo purpose
 
 * [Node](https://nodejs.org/)
 * [Express](https://expressjs.com/)
-* [Mongo](https://www.mongodb.com/)
+* [GraphQL](https://graphql.org/)
+* [Apollo](https://www.apollographql.com/docs/apollo-server/)
+* [Type-GraphQL](https://typegraphql.ml/)
+* [TypeScript](https://www.typescriptlang.org/)
+* [TypeORM](https://typeorm.io/)
+* [Postgres](https://wiki.postgresql.org/wiki/PostgreSQL_Clients)
 * [Redis](https://redis.io/)
 * [ESLint](https://eslint.org/)
 * [Prettier](https://prettier.io/)
