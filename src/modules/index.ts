@@ -9,7 +9,7 @@ export const generateSchema = async (): Promise<GraphQLSchema> => {
 		registerEnumTypes();
 
 		const schema = await buildSchema({
-			resolvers: [__dirname + '/**/resolver.ts'],
+			resolvers: [__dirname + '/**/resolver.*'],
 			authChecker,
 		});
 
