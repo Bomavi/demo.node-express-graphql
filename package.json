@@ -6,7 +6,7 @@
 		"lint": "eslint --ignore-path .gitignore . --ext ts --fix",
 		"build": "rimraf ./dist && tsc -p tsconfig.json",
 		"dev": "cross-env NODE_ENV=development DEBUG=debug,http,graphql,app,mongo,redis,error npm run start:dev",
-		"prod": "cross-env NODE_ENV=production npm-run-all build start",
+		"prod": "NODE_ENV=production npm run start",
 		"start:dev": "ts-node-dev --respawn ./src/index.ts",
 		"start": "node ./dist"
 	},
@@ -41,7 +41,7 @@
 		"ts-jest": "^24.2.0",
 		"ts-node": "^8.5.4",
 		"ts-node-dev": "^1.0.0-pre.44",
-		"typescript": "^3.7.2"
+		"typescript": "^3.7.3"
 	},
 	"dependencies": {
 		"apollo-server-express": "^2.9.12",
