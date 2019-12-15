@@ -21,27 +21,31 @@ service.init();
 (async (): Promise<void> => {
 	const PORT = Number(process.env.PORT || process.env.DEV_PORT);
 
-	await postgresConnect();
+	try {
+		await postgresConnect();
 
-	const schema = await generateSchema();
+		const schema = await generateSchema();
 
-	const apolloServer = new ApolloServer({
-		schema,
-		context: ({ req, res }): ApolloContext => ({ req, res }),
-	});
+		const apolloServer = new ApolloServer({
+			schema,
+			context: ({ req, res }): ApolloContext => ({ req, res }),
+		});
 
-	const app = express();
+		const app = express();
 
-	app.set('trust proxy', true);
+		app.set('trust proxy', true);
 
-	app.use(bodyParser.urlencoded({ extended: false }));
-	app.use(bodyParser.json());
+		app.use(bodyParser.urlencoded({ extended: false }));
+		app.use(bodyParser.json());
 
-	app.use(redisSessionMiddleware);
+		app.use(redisSessionMiddleware);
 
-	apolloServer.applyMiddleware({ app });
+		apolloServer.applyMiddleware({ app });
 
-	app.listen(PORT, () => {
-		logger.app(`Server is running on port ${PORT}`);
-	});
+		app.listen(PORT, () => {
+			logger.app(`Server is running on port ${PORT}`);
+		});
+	} catch (e) {
+		console.error(e);
+	}
 })();
