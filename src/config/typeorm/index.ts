@@ -14,17 +14,28 @@ const postgresConnect = async (): Promise<Partial<Connection>> => {
 	const DB_USERNAME = process.env.POSTGRES_USERNAME || process.env.DB_DEV_USERNAME;
 	const DB_PASSWORD = process.env.POSTGRES_PASSWORD || process.env.DB_DEV_PASSWORD;
 
-	return await createConnection({
+	const connection = await createConnection({
+		name: 'default',
 		type: 'postgres',
 		host: DB_HOST,
 		port: DB_PORT,
 		database: DB_NAME,
 		username: DB_USERNAME,
 		password: DB_PASSWORD,
-		synchronize: true,
-		logging: !isProd,
+		synchronize: true, // TODO // SHOULD TO BE FALSE
+		logging: !isProd ? ['error', 'warn'] : false,
 		entities: [__dirname + '/../../models/*.*'],
+		poolErrorHandler: () => {
+			setTimeout(async () => {
+				console.warn('POSTGRES: reconnecting...');
+				await connection.close();
+				await connection.connect();
+				console.warn('POSTGRES: reconnected!');
+			}, 5000);
+		},
 	});
+
+	return connection;
 };
 
 export { postgresConnect };
