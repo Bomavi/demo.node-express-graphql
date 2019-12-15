@@ -4,7 +4,7 @@ import connectRedis, { RedisStoreOptions } from 'connect-redis';
 
 import { logger } from '~/utils';
 
-const isProd = process.env.NODE_ENV === 'production';
+// const isProd = process.env.NODE_ENV === 'production';
 const maxAge = Number(process.env.SESSION_EXPIRES_IN) * 1000;
 
 const redisStore = connectRedis(session);
@@ -33,7 +33,7 @@ const redisSessionMiddleware = session({
 		maxAge,
 		httpOnly: true,
 		sameSite: true,
-		secure: isProd,
+		// secure: isProd,
 	},
 });
 
