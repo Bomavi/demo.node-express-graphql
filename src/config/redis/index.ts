@@ -1,27 +1,27 @@
 import session from 'express-session';
-import Redis, { RedisOptions } from 'ioredis';
-import connectRedis, { RedisStoreOptions } from 'connect-redis';
+import { createClient } from 'redis';
+import RedisStore from 'connect-redis';
 
-import { logger } from '~/utils';
+import { logger } from 'src/utils';
 
 // const isProd = process.env.NODE_ENV === 'production';
-const maxAge = Number(process.env.SESSION_EXPIRES_IN) * 1000;
+const MAX_AGE = Number(process.env.SESSION_EXPIRES_IN) * 1000;
+const REDIS_HOST = String(process.env.REDIS_HOST) || '127.0.0.1';
+const REDIS_PORT = Number(process.env.REDIS_PORT) || 6379;
+const REDIS_URL = `redis://${REDIS_HOST}:${REDIS_PORT}`;
 
-const redisStore = connectRedis(session);
+const redisClient = createClient({
+	url: REDIS_URL
+});
 
-const redisClientOptions: RedisOptions = {
-	host: String(process.env.REDIS_HOST) || '127.0.0.1',
-	port: Number(process.env.REDIS_PORT) || 6379,
-};
+redisClient.connect();
 
-const redis = new Redis(redisClientOptions);
-
-const redisOptions: RedisStoreOptions = {
-	client: redis,
-};
+const redisStore = new RedisStore({
+	client: redisClient,
+  });
 
 const redisSessionMiddleware = session({
-	store: new redisStore(redisOptions),
+	store: redisStore,
 	secret: String(process.env.SESSION_SECRET),
 	resave: true,
 	rolling: false,
@@ -30,20 +30,20 @@ const redisSessionMiddleware = session({
 	cookie: {
 		path: '/',
 		domain: 'localhost',
-		maxAge,
+		maxAge: MAX_AGE,
 		httpOnly: true,
 		sameSite: true,
 		// secure: isProd,
 	},
 });
 
-redis.on('ready', () => {
+redisClient.on('ready', () => {
 	logger.redis(
-		`Redis connection is open to: ${redisClientOptions.host}:${redisClientOptions.port}`
+		`Redis connection is open to: ${REDIS_URL}`
 	);
 });
 
-redis.on('error', err => {
+redisClient.on('error', err => {
 	logger.redis('Redis connection has occured error: %O', err);
 });
 

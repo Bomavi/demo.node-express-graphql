@@ -1,4 +1,4 @@
-import { jwt, logger } from '~/utils';
+import { jwt, logger } from 'src/utils';
 
 const init = async (): Promise<void> => {
 	const serviceName = process.env.SERVICE_NAME || 'service';

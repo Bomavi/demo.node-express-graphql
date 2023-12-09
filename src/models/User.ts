@@ -9,7 +9,7 @@ import {
 } from 'typeorm';
 import { ObjectType, Field, Int } from 'type-graphql';
 
-import { Theme } from '~/utils/enum';
+import { Theme } from 'src/utils/enum';
 
 import { Task } from './Task';
 

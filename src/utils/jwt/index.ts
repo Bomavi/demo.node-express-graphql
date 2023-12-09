@@ -18,7 +18,7 @@ const issue = (payload: JWTPayload, isExpires = true): Promise<string> =>
 
 		JWT.sign(payload, secret, options, (err, token) => {
 			if (err) reject(err);
-			resolve(token);
+			resolve(token!);
 		});
 	});
 

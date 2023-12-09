@@ -1,6 +1,7 @@
 import { Resolver, Query, Ctx } from 'type-graphql';
 
-import { User } from '~/models/User';
+import { getRepository } from 'src/config/typeorm';
+import { User } from 'src/models/User';
 
 @Resolver()
 export class CurrentUserResolver {
@@ -10,7 +11,7 @@ export class CurrentUserResolver {
 
 		if (!userId) return null;
 
-		const user = await User.findOneOrFail(userId);
+		const user = await getRepository(User).findOneByOrFail({ id: userId });
 
 		return user;
 	}

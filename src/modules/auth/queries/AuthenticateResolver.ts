@@ -1,10 +1,8 @@
 import { Resolver, Query, Ctx, Authorized } from 'type-graphql';
-import { getMongoManager } from 'typeorm';
 
-import { jwt } from '~/utils';
-import { User } from '~/models/User';
-
-const manager = getMongoManager();
+import { jwt } from 'src/utils';
+import { getRepository } from 'src/config/typeorm';
+import { User } from 'src/models/User';
 
 @Resolver()
 export class AuthenticateResolver {
@@ -14,7 +12,7 @@ export class AuthenticateResolver {
 		const { accessToken } = ctx.req.session!;
 
 		const { userId } = await jwt.validate(accessToken!);
-		const user = await manager.findOneOrFail(User, userId);
+		const user = await getRepository(User).findOneByOrFail({ id: userId });
 
 		return user;
 	}

@@ -1,15 +1,21 @@
-import { Resolver, Mutation, Args, Ctx } from 'type-graphql';
-import { getMongoManager } from 'typeorm';
+import { Resolver, Mutation, Args, Ctx, ArgsType, Field } from 'type-graphql';
 import createError from 'http-errors';
 import bcrypt from 'bcryptjs';
 
-import { jwt } from '~/utils';
-import { User } from '~/models/User';
+import { jwt } from 'src/utils';
+import { getRepository } from 'src/config/typeorm';
+import { User } from 'src/models/User';
 
-import { RegisterArgs } from './args';
-
-const manager = getMongoManager();
 const BCRYPT_SALT = Number(process.env.BCRYPT_SALT) || 10;
+
+@ArgsType()
+export class RegisterArgs {
+	@Field(() => String)
+	username!: string;
+
+	@Field(() => String)
+	password!: string;
+}
 
 @Resolver()
 export class RegisterResolver {
@@ -21,7 +27,7 @@ export class RegisterResolver {
 		if (!username) throw createError(404, `username is required`);
 		if (!password) throw createError(404, `password is required`);
 
-		const foundUser = await manager.findOne(User, { username });
+		const foundUser = await getRepository(User).findOneBy({ username });
 
 		if (foundUser) throw createError(405, `user "${username}" already exists`);
 
@@ -29,8 +35,8 @@ export class RegisterResolver {
 
 		if (!hash) throw createError(500, 'bcrypt failed');
 
-		const user = await manager
-			.create(User, {
+		const user = await getRepository(User)
+			.create({
 				username,
 				password: hash,
 			})

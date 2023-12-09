@@ -1,7 +1,7 @@
 import { AuthChecker } from 'type-graphql';
 import createError from 'http-errors';
 
-import { jwt } from '~/utils';
+import { jwt } from 'src/utils';
 
 export const authChecker: AuthChecker<ApolloContext, string[]> = async (
 	{ context: { req } },

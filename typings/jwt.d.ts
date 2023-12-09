@@ -1,5 +1,5 @@
 /* eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars */
-import { ObjectID } from 'typeorm';
+import { ObjectId } from 'typeorm';
 
 declare global {
 	interface JWTPayload {

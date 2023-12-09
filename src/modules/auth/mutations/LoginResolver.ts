@@ -1,15 +1,24 @@
-import { Resolver, Mutation, Args, Ctx } from 'type-graphql';
-import { getMongoManager } from 'typeorm';
+import { Resolver, Mutation, Args, Ctx, ArgsType, Field } from 'type-graphql';
 import createError from 'http-errors';
 import bcrypt from 'bcryptjs';
 
-import { jwt, logger } from '~/utils';
-import { User } from '~/models/User';
+import { jwt, logger } from 'src/utils';
+import { getRepository } from 'src/config/typeorm';
+import { User } from 'src/models/User';
 
-import { LoginArgs } from './args';
-
-const manager = getMongoManager();
 const BCRYPT_SALT = Number(process.env.BCRYPT_SALT) || 10;
+
+@ArgsType()
+export class LoginArgs {
+	@Field(() => String, { defaultValue: '' })
+	username!: string;
+
+	@Field(() => String, { defaultValue: '' })
+	password!: string;
+
+	@Field(() => Boolean, { defaultValue: false })
+	isGuest!: boolean;
+}
 
 @Resolver()
 export class LoginResolver {
@@ -28,7 +37,9 @@ export class LoginResolver {
 		if (!credentials.username) throw createError(404, `username is required`);
 		if (!credentials.password) throw createError(404, `password is required`);
 
-		const foundUser = await manager.findOne(User, { username: credentials.username });
+		const foundUser = await getRepository(User).findOneBy({
+			username: credentials.username,
+		});
 
 		if (foundUser) {
 			const isPasswordEqual = await bcrypt.compare(
@@ -53,7 +64,7 @@ export class LoginResolver {
 			userBody.username = credentials.username;
 			userBody.password = hash;
 
-			const newUser = await manager.save(User, userBody);
+			const newUser = await getRepository(User).save(userBody);
 
 			if (newUser) user = newUser;
 		}
